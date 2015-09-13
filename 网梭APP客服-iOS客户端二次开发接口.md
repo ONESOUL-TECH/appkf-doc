@@ -10,7 +10,7 @@
 
 - [IM消息会话](#IM消息会话)
 
-## 准备工作
+## <a id="准备工作"></a>准备工作
 #### 1. 下载KFSDK-iOS
 [KFSDK-iOS的下载地址](http://xxx)
 #### 2. SDK支持的iOS版本
@@ -25,7 +25,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 为保证Framework能够正常工作，需要在Build Settings -> Other Linker Flags 参数中增加 -ObjC 选项。
 
   
-## 初始化SDK
+## <a id="初始化SDK">初始化SDK
 
 #### 1. SDK初始化工作
 在使用客服SDK之前，需要先初始化：
