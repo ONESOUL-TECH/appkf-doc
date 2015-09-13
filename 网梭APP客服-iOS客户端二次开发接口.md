@@ -3,31 +3,38 @@
 
 ## 目录
 - [准备工作](#准备工作)
-
+  - [下载客服SDK-iOS](#下载sdk)
+  - [SDK支持的iOS版本](#supported-iOS-version)
+  - [添加Framework](#添加Framework)
+  - [设置编译选项](#设置编译选项)
 - [初始化SDK](#初始化SDK)
-
+  - [SDK初始化工作](#SDK初始化工作)
+  - [实现QZUCCDelegate接口](#实现QZUCCDelegate接口)
 - [实时语音通话](#实时语音通话)
-
+  - [开始实时语音通话](#开始实时语音通话)
+  - [实现QCallDelegate接口](#实现QCallDelegate接口)
 - [IM消息会话](#IM消息会话)
+  - [开始IM消息会话](#开始IM消息会话)
+  - [APP主动发送IM消息](#APP主动发送IM消息)
 
 ## <a id="准备工作"></a>准备工作
-#### 1. 下载KFSDK-iOS
+#### <a id="下载sdk"></a>1. 下载客服SDK-iOS
 [KFSDK-iOS的下载地址](http://xxx)
-#### 2. SDK支持的iOS版本
+#### <a id="supported-iOS-version"></a>2. SDK支持的iOS版本
 iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
-#### 3. 添加Framework
+#### <a id="添加Framework"></a>3. 添加Framework
 
 下载完成后，解压得到QZUCC.framework和QZUCC.bundle两个文件，添加这两个文件到你的APP工程，同时引入sdk：
 
 `#import <QZUCC/QZUCC.h>
-#### 4. 设置编译选项
+#### <a id="设置编译选项"></a>4. 设置编译选项
 
 为保证Framework能够正常工作，需要在Build Settings -> Other Linker Flags 参数中增加 -ObjC 选项。
 
   
 ## <a id="初始化SDK">初始化SDK
 
-#### 1. SDK初始化工作
+#### <a id="SDK初始化工作"></a>1. SDK初始化工作
 在使用客服SDK之前，需要先初始化：
 
 ```
@@ -64,7 +71,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 上面几行代码，就完成了初始化，然后我们来看QZUCCDelegate的实现:
 
-#### 2. 实现QZUCCDelegate接口
+#### <a id="实现QZUCCDelegate接口"></a>2. 实现QZUCCDelegate接口
 
 ```
  #pragma mark - QZUCCDelegate protocol implementation
@@ -151,8 +158,8 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 ```
 
-## 实时语音通话
-#### 1. 开始一个实时语音通话：
+## <a id="实时语音通话"></a>实时语音通话
+#### <a id="开始实时语音通话"></a>1. 开始实时语音通话
 
 ```
 - (IBAction)phoneCall:(UIButton *)sender {
@@ -182,7 +189,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 呼叫开始后，SDK就会显示正在呼叫的UI界面，并且实时更新呼叫接续的过程。开始一个实时语音通话就是这么简单。
 
-#### 2. 实现QCallDelegate接口
+#### <a id="实现QCallDelegate接口"></a>2. 实现QCallDelegate接口
 如果你希望获取更多的呼叫事件（成功、失败、呼入），就需要实现QCallDelegate接口：
 
 ```
@@ -221,9 +228,9 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 ```
 
-## IM消息会话
+## <a id="IM消息会话"></a>IM消息会话
 
-#### 1.开始IM消息会话
+#### <a id="开始IM消息会话"></a>1. 开始IM消息会话
 
 ```
 - (IBAction)chat:(UIButton *)sender {
@@ -250,7 +257,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 2. pushChatFromViewController: 方法，指定将IM消息会话ViewController压入到当前ViewController之上。
 3. 所有会话过程都由SDK自动完成，很简单，是不是。
 
-#### 2.APP主动发送IM消息
+#### <a id="APP主动发送IM消息"></a>2. APP主动发送IM消息
 ```
 [待完善]
 ```
