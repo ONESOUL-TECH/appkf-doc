@@ -1,23 +1,33 @@
 # 网梭APP客服 - iOS客户端二次开发接口
 
+
+## 目录
+- [准备工作](#准备工作)
+
+- [初始化SDK](#初始化SDK)
+
+- [实时语音通话](#实时语音通话)
+
+- [IM消息会话](#IM消息会话)
+
 ## 准备工作
-### 1. 下载KFSDK-iOS
+#### 1. 下载KFSDK-iOS
 [KFSDK-iOS的下载地址](http://xxx)
-### 2. SDK支持的iOS版本
+#### 2. SDK支持的iOS版本
 iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
-### 3. 添加Framework
+#### 3. 添加Framework
 
 下载完成后，解压得到QZUCC.framework和QZUCC.bundle两个文件，添加这两个文件到你的APP工程，同时引入sdk：
 
 `#import <QZUCC/QZUCC.h>
-### 4. 设置编译选项
+#### 4. 设置编译选项
 
 为保证Framework能够正常工作，需要在Build Settings -> Other Linker Flags 参数中增加 -ObjC 选项。
 
   
 ## 初始化SDK
 
-### 1. SDK初始化工作
+#### 1. SDK初始化工作
 在使用客服SDK之前，需要先初始化：
 
 ```
@@ -54,7 +64,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 上面几行代码，就完成了初始化，然后我们来看QZUCCDelegate的实现:
 
-### 2. 实现QZUCCDelegate接口
+#### 2. 实现QZUCCDelegate接口
 
 ```
  #pragma mark - QZUCCDelegate protocol implementation
@@ -141,7 +151,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 ```
 
-### 实时语音通话
+## 实时语音通话
 #### 1. 开始一个实时语音通话：
 
 ```
@@ -213,7 +223,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 ## IM消息会话
 
-### 1.开始IM消息会话
+#### 1.开始IM消息会话
 
 ```
 - (IBAction)chat:(UIButton *)sender {
@@ -240,7 +250,7 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 2. pushChatFromViewController: 方法，指定将IM消息会话ViewController压入到当前ViewController之上。
 3. 所有会话过程都由SDK自动完成，很简单，是不是。
 
-### 2.APP主动发送IM消息
+#### 2.APP主动发送IM消息
 ```
 [待完善]
 ```
