@@ -25,5 +25,5 @@
 
 ### 二次开发接口
 1. 服务端接口
-2. [iOS客户端接口](网梭APP客服-iOS客户端二次开发接口.md)
-3. Android客户端接口
+2. [iOS SDK接口](网梭APP客服-iOS客户端二次开发接口.md)
+3. Android SDK接口
