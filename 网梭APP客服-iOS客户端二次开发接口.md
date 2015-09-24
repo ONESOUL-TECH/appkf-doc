@@ -5,32 +5,44 @@
 - [准备工作](#准备工作)
   - [下载客服SDK-iOS](#下载sdk)
   - [SDK支持的iOS版本](#supported-iOS-version)
-  - [添加Framework](#添加Framework)
+  - [添加SdK到工程](#添加SDK到工程)
   - [设置编译选项](#设置编译选项)
 - [初始化SDK](#初始化SDK)
   - [SDK初始化工作](#SDK初始化工作)
   - [实现QZUCCDelegate接口](#实现QZUCCDelegate接口)
-- [实时语音通话](#实时语音通话)
-  - [开始实时语音通话](#开始实时语音通话)
-  - [实现QCallDelegate接口](#实现QCallDelegate接口)
 - [IM消息会话](#IM消息会话)
   - [开始IM消息会话](#开始IM消息会话)
   - [APP主动发送IM消息](#APP主动发送IM消息)
 
 ## <a id="准备工作"></a>准备工作
-#### <a id="下载sdk"></a>1. 下载客服SDK-iOS
-[KFSDK-iOS的下载地址](http://xxx)
-#### <a id="supported-iOS-version"></a>2. SDK支持的iOS版本
-iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
-#### <a id="添加Framework"></a>3. 添加Framework
+#### <a id="下载sdk"></a>1.下载客服SDK-iOS
+[下载 Onesoul-IM-SDK for iOS](https://github.com/ONESOUL-TECH/appkf-SDK-iOS)
+#### <a id="supported-iOS-version"></a>2.SDK支持的iOS版本
+iOS6.0以上版本。兼容iPhone、iPad、iPod touch、模拟器等设备。
+#### <a id="添加SDK到工程"></a>3.添加SDK到工程
 
-下载完成后，解压得到QZUCC.framework和QZUCC.bundle两个文件，添加这两个文件到你的APP工程，同时引入sdk：
+* 下载完成后，找到SDK目录，里面有:
+   * libOnesoul-IM-SDK.a： 静态库文件
+   * Onesoul-IM-SDK-Bundle.bundle：静态库依赖的资源文件bundle
+   * Onesoul-IM-SDK：头文件
 
-`#import <QZUCC/QZUCC.h>
-#### <a id="设置编译选项"></a>4. 设置编译选项
+   把SDK下的全部内容加入到你的工程中 
 
-为保证Framework能够正常工作，需要在Build Settings -> Other Linker Flags 参数中增加 -ObjC 选项。
+* 添加以下Linked Frameworks and Librarys:
+	* libxml2.dylib
+	* libz.1.2.5.dylib
+	* libc++.dylib
+	* libicucore.dylib
+	* libresolv.dylib
+	* libsqlite3.dylib
+	* libOnesoul-IM-SDK.a
+* 在你的.m文件中引入sdk头文件：  
+	\#import "QZUCC.h"
 
+#### <a id="设置编译选项"></a>4.设置编译选项
+
+* Build Settings -> Other Linker Flags: 增加 -ObjC 选项。
+* XCode7编译环境下：Building Settings -> Build Options -> Enable Bitcode: 设置为No
   
 ## <a id="初始化SDK">初始化SDK
 
@@ -40,34 +52,37 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 ```
 - (void)setupUCCSDK {
     // 1
-    [QZUCC initWithAbility:@"[\"IM\",\"Phone\"]" icon:nil delete:self];
+    [QZUCC initWithAbility:@"[\"IM\",\"Phone\"]" bundle:@"Onesoul-IM-SDK-Bundle.bundle" delegate:self];
     
     // 2
-    [[QZUCC getInstance] addCallEventObserver:self];
-    [[QZUCC getInstance] setUseCustomCallUI:NO];
-    
-    // 3
-    [[QZUCC getInstance] connectWithUCMUrl:demoUCCServer qzId:demoCustomerUCCID authToken:demoCustomerUCCToken deviceToken:nil completion:^{
+    QZUCC *ucc = [QZUCC getInstance];
+    [ucc connectWithUCMUrl:@"os.qyucc.com:809" qzId:userId authToken:@"" completion:^{
         
-        NSLog(@"======授权成功=========");
+        NSLog(@"MainViewCtrl======授权成功=========");
+        
+        [self checkAuth];
         
     } fail:^(NSError *error) {
-        NSLog(@"======授权失败=========%@", error);
-    }];
+        NSLog(@"MainViewCtrl======授权失败=========%@", error);
+    }];    
 }
 
 ```
 解释一下上面的代码：
 
-1. initWithAbility: 加载SDK，并声明你的APP需要用到的能力类型："IM"表示即时消息能力、"Phone"表示实时语音能力。delegate是QZUCCDelegate类型，这里设置为self，所以后续你需要实现QZUCCDelegate。
-2. [QZUCC getInstance]得到一个全局唯一的QZUCC实例，addCallEventObserver: 设置实时语音呼叫事件的监听者；如果你需要在APP中记录语音呼叫的开始和结束事件，那么就需要实现QCallDelegate.
-3. 设置完成后，就可以开始连接客服后台服器:
-      connectWithUCMUrl:qzId:authToken:deviceToken:completion:
+1. initWithAbility:bundle:delegate
+
+   - 加载SDK，并声明你的APP需要用到的能力类型：
+   "IM"表示即时消息能力、"Phone"表示实时语音能力
+
+   - delegate是QZUCCDelegate类型，这里设置为self，所以后续你需要实现QZUCCDelegate；
+2. [QZUCC getInstance]得到一个全局唯一的QZUCC实例；
+3. 设置完成后，就可以开始连接客服后台服务器:
+      connectWithUCMUrl:qzId:authToken:completion:
    这个方法的参数如下：
    * UCMUrl: 客服服务器的地址
-   * qzId: 当前用户在客服服务器的用户账号，这个需要从事先你的APP后台获取到；
+   * qzId: 当前用户在客服服务器的用户账号，这个需要事先你的APP后台获取到；
    * authToken: 当前用户在客服服务器的用户token，也是事先从你的APP后台获取到。
-   * deviceToken: APNS消息推送需要用到的token。
 
 上面几行代码，就完成了初始化，然后我们来看QZUCCDelegate的实现:
 
@@ -158,76 +173,6 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 
 ```
 
-## <a id="实时语音通话"></a>实时语音通话
-#### <a id="开始实时语音通话"></a>1. 开始实时语音通话
-
-```
-- (IBAction)phoneCall:(UIButton *)sender {
-    QZUCC *ucc = [QZUCC getInstance];
-    
-    int qphoneConnect = [ucc getAbilityState:AbilityPhone];
-    if (!qphoneConnect) {
-        NSLog(@"客服后台连接中,请稍候。。。");
-        return;
-    }
-    
-    // 1
-    NSString *callCenterPhoneId = @"1111";
-    
-    // 2
-    [ucc dialPhone:callCenterPhoneId completion:^{
-        NSLog(@"呼叫CallCenter Phone(%@)", callCenterPhoneId);
-    } fail:^(NSError *error) {
-        NSLog(@"呼叫CallCenter Phone(%@)失败，err = %@", callCenterPhoneId, error);
-    }];
-}
-```
-解释一下：
-
-1. 实时语音通话需要先指定客服接入号码，如例子中的callCenterPhoneId。在实际应用中，APP应用从后台服务获取一个（或多个）语音客服的接入号码；
-2. 然后调用dialPhone:completion: 方法。
-
-呼叫开始后，SDK就会显示正在呼叫的UI界面，并且实时更新呼叫接续的过程。开始一个实时语音通话就是这么简单。
-
-#### <a id="实现QCallDelegate接口"></a>2. 实现QCallDelegate接口
-如果你希望获取更多的呼叫事件（成功、失败、呼入），就需要实现QCallDelegate接口：
-
-```
- #pragma mark - QCallDelegate implementation
-
-/**
- * 电话呼入通知事件
- * @param callInfo 参见QCallInfo对象
- * @return
- */
-- (void)onIncomingCall:(QCallInfo *)callInfo
-{
-    NSLog(@"<onIncomingCall:>- %@", callInfo.phoneNumber);
-}
-
-/**
- * 通话对象状态变化通知事件
- * @param callInfo 参见QCallInfo对象
- * @return
- */
-- (void)onCallStateChanged:(QCallInfo *)callInfo
-{
-    switch (callInfo.callState) {
-        case CallStateIncoming://电话呼入事件
-            break;
-        case CallStateCalling://电话呼出事件，
-            break;
-        case CallStateConfirmed://呼入或呼出电话接通事件
-            break;
-        case CallStateDisconnected://电话挂断或被挂断事件
-            break;
-        default:
-            break;
-    }
-}
-
-```
-
 ## <a id="IM消息会话"></a>IM消息会话
 
 #### <a id="开始IM消息会话"></a>1. 开始IM消息会话
@@ -253,11 +198,12 @@ iOS6.0以上版本。兼容iPhone、iPad、iPod touch等设备。
 ```
 
 解释一下：
-1. 开始IM消息会话之前，需要先从你的后台服务获取对应的IM客服接入号码，如例子代码中的"uckf.200000411201"；
-2. pushChatFromViewController: 方法，指定将IM消息会话ViewController压入到当前ViewController之上。
-3. 所有会话过程都由SDK自动完成，很简单，是不是。
+
+* 开始IM消息会话之前，需要先从你的后台服务获取对应的IM客服接入号码，如例子代码中的"uckf.200000411201"；
+* pushChatFromViewController: 方法，指定将IM消息会话ViewController压入到当前ViewController之上。
+* 所有会话过程及IM消息的UI工作都由SDK自动完成，很简单，是不是。
 
 #### <a id="APP主动发送IM消息"></a>2. APP主动发送IM消息
 ```
-[待完善]
+[暂不提供]
 ```
